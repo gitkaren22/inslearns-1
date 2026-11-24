@@ -67,12 +67,14 @@
         <div class="barra-superior-feed">
           <div>
             <h2 id="titulo-cuaderno">Mi Cuaderno</h2>
-            <p class="texto-apoyo">Tus apuntes guardados de matemáticas, disponibles con persistencia local.</p>
+            <p id="texto-apoyo-cuaderno" class="texto-apoyo">Tus apuntes guardados de matemáticas, disponibles con persistencia local.</p>
           </div>
         </div>
         <div class="filtros-cuaderno">
-          <label for="filtro-cuaderno">Filtrar por tema o título</label>
-          <input id="filtro-cuaderno" type="text" placeholder="Escribe para filtrar">
+          <label for="filtro-tema-cuaderno">Filtrar por tema</label>
+          <select id="filtro-tema-cuaderno" class="selector-tema">
+            <option value="todos">Todos</option>
+          </select>
         </div>
         <div id="contenedor-guardados" class="contenedor-publicaciones" aria-live="polite"></div>
       </section>
@@ -109,7 +111,7 @@
     <nav id="barra-navegacion" class="barra-navegacion oculto" aria-label="Navegación principal">
       <button type="button" class="boton-nav activo" data-seccion="feed" aria-label="Feed">Feed</button>
       <button type="button" class="boton-nav boton-nav-publicar" data-seccion="publicar" aria-label="Publicar">+ Publicar</button>
-      <button type="button" class="boton-nav" data-seccion="cuaderno" aria-label="Mi Cuaderno">Mi Cuaderno</button>
+      <button type="button" class="boton-nav" data-seccion="cuaderno" aria-label="Mi Cuaderno">Mi Cuaderno <span id="contador-guardados" class="contador-guardados">(0)</span></button>
     </nav>
 
     <footer class="pie-pagina">

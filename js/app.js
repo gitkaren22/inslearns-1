@@ -2,6 +2,7 @@
 
 let seccionActual = 'feed';
 let temaSeleccionadoFeed = 'todos';
+let temaSeleccionadoCuaderno = 'todos';
 const respuestasEjercicio = {};
 
 // Obtiene un elemento del DOM por su identificador
@@ -188,18 +189,14 @@ function obtenerTemasDisponibles() {
   return [...new Set(temas)];
 }
 
-// Actualiza las opciones del filtro por tema en el feed
+// Actualiza las opciones del filtro por tema en el feed y en Mi Cuaderno
 function actualizarSelectorTemas() {
-  const selector = obtenerElemento('filtro-tema-feed');
-  const temas = obtenerTemasDisponibles();
-  const opciones = ['<option value="todos">Todos los temas</option>'];
-  temas.forEach((tema) => {
-    const seleccionado = tema === temaSeleccionadoFeed ? 'selected' : '';
-    opciones.push(`<option value="${tema}" ${seleccionado}>${tema}</option>`);
-  });
-  selector.innerHTML = opciones.join('');
-  selector.value = temas.includes(temaSeleccionadoFeed) ? temaSeleccionadoFeed : 'todos';
-  temaSeleccionadoFeed = selector.value;
+  temaSeleccionadoFeed = actualizarSelectorTemasEn('filtro-tema-feed', temaSeleccionadoFeed);
+  const selectorFeed = obtenerElemento('filtro-tema-feed');
+  if (selectorFeed && selectorFeed.options[0]) {
+    selectorFeed.options[0].textContent = 'Todos los temas';
+  }
+  temaSeleccionadoCuaderno = actualizarSelectorTemasEn('filtro-tema-cuaderno', temaSeleccionadoCuaderno);
 }
 
 // Filtra publicaciones del feed por tema seleccionado
@@ -211,13 +208,41 @@ function obtenerPublicacionesFiltradasFeed() {
   return publicaciones.filter((publicacion) => publicacion.materia === temaSeleccionadoFeed);
 }
 
+// Actualiza las opciones de un selector de temas
+function actualizarSelectorTemasEn(idSelector, temaSeleccionado) {
+  const selector = obtenerElemento(idSelector);
+  if (!selector) {
+    return 'todos';
+  }
+  const temas = obtenerTemasDisponibles();
+  const opciones = [`<option value="todos">Todos</option>`];
+  temas.forEach((tema) => {
+    const seleccionado = tema === temaSeleccionado ? 'selected' : '';
+    opciones.push(`<option value="${tema}" ${seleccionado}>${tema}</option>`);
+  });
+  selector.innerHTML = opciones.join('');
+  selector.value = temas.includes(temaSeleccionado) ? temaSeleccionado : 'todos';
+  return selector.value;
+}
+
+// Actualiza el contador visible de apuntes guardados
+function actualizarContadorGuardados() {
+  const contador = obtenerElemento('contador-guardados');
+  if (!contador) {
+    return;
+  }
+  const total = obtenerPublicaciones().filter((publicacion) => publicacion.guardado).length;
+  contador.textContent = `(${total})`;
+}
+
 // Renderiza la vista activa (feed o cuaderno)
 function renderizarVistaActual() {
+  actualizarSelectorTemas();
+  actualizarContadorGuardados();
   if (seccionActual === 'cuaderno') {
     renderizarCuaderno();
     return;
   }
-  actualizarSelectorTemas();
   renderizarPublicaciones();
 }
 
@@ -332,25 +357,25 @@ function renderizarPublicaciones() {
   renderizarListaPublicaciones('contenedor-publicaciones', publicaciones, 'No hay publicaciones para este tema.');
 }
 
-// Filtra publicaciones guardadas según el texto ingresado
-function filtrarGuardados(publicaciones, filtro) {
-  const termino = filtro.trim().toLowerCase();
-  if (!termino) {
+// Filtra publicaciones guardadas por tema seleccionado
+function filtrarGuardados(publicaciones, filtroTema) {
+  if (!filtroTema || filtroTema === 'todos') {
     return publicaciones;
   }
-  return publicaciones.filter((publicacion) => {
-    const materia = (publicacion.materia || '').toLowerCase();
-    const titulo = (publicacion.titulo || '').toLowerCase();
-    return materia.includes(termino) || titulo.includes(termino);
-  });
+  return publicaciones.filter((publicacion) => publicacion.materia === filtroTema);
 }
 
 // Renderiza las publicaciones guardadas en el cuaderno
 function renderizarCuaderno() {
-  const filtro = obtenerElemento('filtro-cuaderno').value || '';
+  actualizarSelectorTemas();
   const guardadas = obtenerPublicaciones().filter((publicacion) => publicacion.guardado);
-  const filtradas = filtrarGuardados(guardadas, filtro);
-  const mensaje = guardadas.length ? 'No hay resultados para el filtro.' : 'Aún no tienes apuntes guardados en Mi Cuaderno.';
+  const contenedor = obtenerElemento('contenedor-guardados');
+  if (!guardadas.length) {
+    contenedor.innerHTML = `<div class="estado-vacio-cuaderno"><p class="mensaje-vacio">Aún no tienes apuntes guardados en Mi Cuaderno.</p><button type="button" class="boton-principal boton-volver-feed" data-accion="volver-feed">Volver al Feed</button></div>`;
+    return;
+  }
+  const filtradas = filtrarGuardados(guardadas, temaSeleccionadoCuaderno);
+  const mensaje = filtradas.length ? '' : 'No hay apuntes guardados para este tema.';
   renderizarListaPublicaciones('contenedor-guardados', filtradas, mensaje);
 }
 
@@ -401,11 +426,18 @@ function manejarAccionPublicacion(evento) {
     return;
   }
   const boton = evento.target.closest('button[data-accion]');
-  const tarjeta = evento.target.closest('.tarjeta-publicacion');
-  if (!boton || !tarjeta) {
+  if (!boton) {
     return;
   }
   const accion = boton.dataset.accion;
+  if (accion === 'volver-feed') {
+    mostrarSeccionPrincipal('feed');
+    return;
+  }
+  const tarjeta = evento.target.closest('.tarjeta-publicacion');
+  if (!tarjeta) {
+    return;
+  }
   const idPublicacion = tarjeta.dataset.id;
   if (accion === 'like' || accion === 'guardar') {
     actualizarInteraccion(idPublicacion, accion);
@@ -459,6 +491,13 @@ function manejarCambioTema(evento) {
   renderizarPublicaciones();
 }
 
+// Maneja el cambio del filtro por tema en Mi Cuaderno
+function manejarCambioTemaCuaderno(evento) {
+  temaSeleccionadoCuaderno = evento.target.value;
+  renderizarCuaderno();
+  actualizarContadorGuardados();
+}
+
 // Configura eventos principales de la interfaz
 function configurarEventos() {
   obtenerElemento('formulario-registro').addEventListener('submit', manejarEnvioRegistro);
@@ -472,7 +511,7 @@ function configurarEventos() {
   obtenerElemento('barra-navegacion').addEventListener('click', manejarNavegacion);
   obtenerElemento('boton-cerrar-modal').addEventListener('click', cerrarModalPublicar);
   obtenerElemento('formulario-publicar').addEventListener('submit', manejarEnvioPublicacion);
-  obtenerElemento('filtro-cuaderno').addEventListener('input', renderizarCuaderno);
+  obtenerElemento('filtro-tema-cuaderno').addEventListener('change', manejarCambioTemaCuaderno);
   obtenerElemento('filtro-tema-feed').addEventListener('change', manejarCambioTema);
 }
 
@@ -482,6 +521,7 @@ function iniciarAplicacion() {
   cargarUsuarioEnFormulario(usuario);
   configurarEventos();
   actualizarSelectorTemas();
+  actualizarContadorGuardados();
   const tienePerfil = usuario.nombre && usuario.carrera;
   if (tienePerfil) {
     mostrarResumenPerfil(usuario);
