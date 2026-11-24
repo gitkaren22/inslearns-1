@@ -1,30 +1,63 @@
-# Inslearns
+# Inslearns — Matemáticas Cyberpunk
 
-**Inslearns** es una red social educativa interactiva con estilo inspirado en Instagram y una estética **cyberpunk**, diseñada para que estudiantes descubran, compartan y validen apuntes de forma dinámica. La plataforma permite registrar materias e intereses, explorar publicaciones en un feed desplazable y usar inteligencia artificial en cada publicación para verificar la veracidad del contenido y generar ejercicios de aprendizaje.
+**Inslearns** es una red social educativa interactiva estilo Instagram, en su versión **Matemáticas Cyberpunk**, centrada en el aprendizaje de matemáticas mediante publicaciones visuales con diagramas, validación de contenido y práctica interactiva.
 
-## Visión del proyecto
+La aplicación ofrece un feed mobile-first con tarjetas educativas donde se pueden explorar conceptos de álgebra, geometría, trigonometría, cálculo y estadística, interactuar con cada publicación y guardar apuntes en un cuaderno personal con persistencia local.
 
-Crear un espacio digital donde el aprendizaje colaborativo sea visual, rápido y confiable. Inslearns busca combinar la experiencia de consumo de contenido tipo red social con herramientas educativas que fomenten el pensamiento crítico, la revisión de fuentes y la práctica activa mediante ejercicios generados a partir de cada apunte.
+## Descripción
 
-## Estética cyberpunk interactiva
+Inslearns combina la dinámica de una red social con herramientas de estudio:
 
-La interfaz apuesta por una identidad visual futurista y envolvente:
+- **Feed educativo de matemáticas:** publicaciones con autor, tema, contenido breve y diagramas o imágenes visuales para apoyar la comprensión.
+- **Interacción social de aprendizaje:** me gusta por botón o doble clic, y guardado de apuntes favoritos.
+- **Organización personal:** vista **Mi Cuaderno** para consultar las publicaciones guardadas.
+- **Apoyo con IA (simulada/local):** verificación de veracidad del contenido y ejercicios interactivos de práctica con retroalimentación inmediata.
 
-- **Paleta neón sobre fondo oscuro:** contrastes con cian, magenta y violeta para resaltar acciones y estados.
-- **Tarjetas con brillo y profundidad:** bordes luminosos, sombras y efectos de realce al interactuar.
-- **Experiencia tipo aplicación móvil:** diseño *mobile-first* con contenedor centrado y ancho máximo de 480px en escritorio.
-- **Interacciones dinámicas:** botones con retroalimentación visual, despliegue de resultados de IA y acciones rápidas en cada publicación (me gusta, guardar, verificar y practicar).
-- **Jerarquía visual clara:** cada tarjeta muestra autor, etiqueta de materia, contenido breve y una barra de acciones para facilitar la lectura y el uso.
+## Estética
 
-## Funcionalidades clave
+La interfaz utiliza una **estética cyberpunk** coherente y enfocada en la legibilidad:
 
-- **Registro de perfil estudiantil:** captura de nombre, carrera, materias seleccionadas e intereses.
-- **Feed educativo desplazable:** exploración de apuntes y publicaciones en formato de tarjetas, similar al flujo de una red social.
-- **Verificación de veracidad con IA:** análisis del contenido de cada publicación con nivel de confianza y explicación académica.
-- **Generación de ejercicios con IA:** creación de preguntas de opción múltiple con retroalimentación a partir del contenido del apunte.
-- **Interacción con publicaciones:** acciones para dar *me gusta*, guardar publicaciones y consultar resultados de IA por publicación.
-- **Persistencia local:** almacenamiento de usuario, publicaciones y guardados en `localStorage` para conservar el estado entre sesiones.
-- **Modo simulado de IA:** lógica preparada para funcionar en modo local simulado y con posibilidad de integrarse a una API externa manteniendo la misma interfaz.
+- **Fondo oscuro** con degradados profundos para resaltar el contenido.
+- **Acentos neón** en **cian**, **magenta**, **amarillo** y **verde** para botones, bordes, etiquetas y estados.
+- **Enfoque mobile-first** con contenedor centrado y ancho máximo de **480px** en escritorio, simulando una experiencia de aplicación móvil.
+- **Tarjetas limpias** con jerarquía visual clara: autor, tema, diagrama, título, contenido y barra de acciones.
+- **Sin estilos en línea:** toda la presentación se define en `css/styles.css`.
+
+## Funcionalidades principales
+
+- Al menos **5 publicaciones de matemáticas** precargadas con diagramas/imágenes visuales.
+- **Filtro por tema** en el feed para explorar contenidos específicos.
+- **Me gusta** mediante botón o doble clic sobre la tarjeta.
+- **Botón Guardar** para marcar o desmarcar publicaciones.
+- **Vista Mi Cuaderno** con publicaciones guardadas y filtro por tema o título.
+- **Persistencia en `localStorage`** para usuario, publicaciones y guardados.
+- **Verificador de veracidad** por publicación con validación matemática simulada.
+- **Ejercicios interactivos** con opciones de práctica y respuesta inmediata de acierto o error.
+
+## Verificador de veracidad
+
+Cada tarjeta incluye el botón **"Verificar veracidad"**, que ejecuta la lógica definida en `js/ai.js` para evaluar el contenido de la publicación.
+
+- **Entrada:** el objeto de la publicación (`Publicacion`).
+- **Salida:** un resultado con:
+  - `nivelConfianza`: indica el nivel de confianza del análisis.
+  - `explicacionAcademica`: breve explicación o validación matemática del contenido.
+- **Comportamiento en la interfaz:** al presionar el botón, se muestra en la tarjeta un bloque de **Validación matemática** con el nivel de confianza y la explicación. El resultado se guarda en la publicación y persiste en `localStorage`.
+
+La implementación actual funciona en **modo simulado local**, con la misma interfaz preparada para una posible integración con una API externa.
+
+## Ejercicios interactivos
+
+Cada tarjeta incluye el botón **"Practicar ejercicio"**, que genera o muestra una práctica asociada al contenido de la publicación.
+
+- **Generación:** si la publicación no tiene ejercicio, `js/ai.js` crea uno con:
+  - `pregunta`
+  - `opciones`
+  - `indiceCorrecto`
+  - `retroalimentacion`
+- **Interacción:** las opciones se presentan como botones seleccionables dentro de la tarjeta.
+- **Respuesta inmediata:** al elegir una opción, la interfaz indica de forma inmediata si la respuesta es **correcta** o **incorrecta** y muestra la retroalimentación correspondiente.
+- **Persistencia:** el ejercicio generado se guarda en la publicación dentro de `localStorage`; la selección realizada en la práctica se maneja en la sesión actual para una experiencia interactiva.
 
 ## Estructura de carpetas
 
@@ -36,20 +69,20 @@ La interfaz apuesta por una identidad visual futurista y envolvente:
 ├── css/
 │   └── styles.css
 └── js/
+    ├── ai.js
     ├── app.js
-    ├── data.js
-    └── ai.js
+    └── data.js
 ```
 
 ### Descripción de archivos
 
-- `index.html`: punto de entrada y estructura semántica de la interfaz en español.
-- `css/styles.css`: estilos principales, estética cyberpunk, responsividad y componentes visuales.
-- `js/app.js`: lógica principal, manipulación del DOM, eventos y orquestación de funcionalidades.
-- `js/data.js`: modelos, datos de ejemplo y gestión del estado en `localStorage`.
-- `js/ai.js`: módulo exclusivo de IA para verificación de veracidad y generación de ejercicios (sin manipulación del DOM).
+- `index.html`: estructura semántica de la interfaz y punto de entrada de la aplicación.
+- `css/styles.css`: estilos principales, paleta cyberpunk, diseño mobile-first y componentes visuales.
+- `js/app.js`: lógica de interfaz, eventos, filtros, interacciones, renderizado y orquestación.
+- `js/data.js`: modelos, datos iniciales de matemáticas, diagramas visuales y persistencia en `localStorage`.
+- `js/ai.js`: módulo de IA para verificación de veracidad y generación de ejercicios, separado de la manipulación del DOM.
 
-## Guía rápida para ejecutarlo
+## Cómo ejecutarlo
 
 ### Opción 1: Ejecutar en local
 
@@ -58,9 +91,7 @@ La interfaz apuesta por una identidad visual futurista y envolvente:
    git clone https://github.com/gitkarenh/inslearns.git
    cd inslearns
    ```
-2. **Abre el proyecto:**
-   - Opción rápida: abre el archivo `index.html` directamente en tu navegador.
-   - Opción recomendada: usa un servidor local estático para evitar restricciones del navegador.
+2. **Inicia un servidor estático (recomendado):**
 
    Con Python 3:
    ```bash
@@ -71,25 +102,41 @@ La interfaz apuesta por una identidad visual futurista y envolvente:
    ```bash
    npx serve .
    ```
-3. **Accede en el navegador:**
-   - Si usaste servidor local: `http://localhost:8000`
-   - Si abriste el archivo directamente: verifica que los recursos carguen correctamente.
+3. **Abre la aplicación en el navegador:**
+   - `http://localhost:8000`
+
+> También puedes abrir `index.html` directamente, pero se recomienda un servidor local para un comportamiento más consistente.
 
 ### Opción 2: Ejecutar en GitHub Codespaces
 
 1. Abre el repositorio en GitHub.
-2. Haz clic en **Code** → pestaña **Codespaces** → **Create codespace on main** (o la rama que corresponda).
+2. Haz clic en **Code** → **Codespaces** → **Create codespace on main** (o la rama correspondiente).
 3. Espera a que el entorno se inicie.
-4. En la terminal de Codespaces, inicia un servidor estático:
+4. En la terminal de Codespaces, ejecuta:
    ```bash
    python3 -m http.server 8000
    ```
-5. Codespaces detectará el puerto y te ofrecerá abrirlo en el navegador (botón **Open in Browser** o pestaña **Ports**).
-6. Interactúa con la aplicación desde la vista previa en tu navegador.
+5. Abre el puerto **8000** desde la pestaña **Ports** o con el botón **Open in Browser**.
+6. Interactúa con la aplicación desde el navegador.
 
-## Notas de desarrollo
+## Checklist de pruebas rápidas
 
-- Proyecto construido con **HTML5, CSS3 y JavaScript ES6+ puro** (sin frameworks).
-- Toda la interfaz, identificadores descriptivos y comentarios deben mantenerse en **español**.
-- La lógica de IA debe permanecer en `js/ai.js`, separada de la manipulación del DOM.
-- Antes de realizar cambios, revisa las reglas y convenciones definidas en [`AGENTS.md`](AGENTS.md).
+- [ ] **Carga inicial:** la aplicación abre sin errores visibles y muestra la pantalla de registro o el feed según el estado guardado.
+- [ ] **Publicaciones de matemáticas:** el feed muestra al menos 5 publicaciones con tema, contenido y diagrama/visual.
+- [ ] **Filtro por tema:** al cambiar el filtro en el feed, solo se muestran las publicaciones del tema seleccionado.
+- [ ] **Me gusta por botón:** el contador de "Me gusta" aumenta al presionar el botón en una tarjeta.
+- [ ] **Me gusta por doble clic:** el contador aumenta al hacer doble clic sobre una tarjeta.
+- [ ] **Guardar:** el botón "Guardar" cambia de estado y la publicación se agrega o quita de Mi Cuaderno.
+- [ ] **Mi Cuaderno:** la vista muestra las publicaciones guardadas y permite filtrarlas por tema o título.
+- [ ] **Persistencia:** al recargar la página, se conservan el perfil, las publicaciones, los likes/guardados y el contenido de Mi Cuaderno en `localStorage`.
+- [ ] **Verificar veracidad:** el botón muestra la validación matemática con nivel de confianza y explicación académica.
+- [ ] **Practicar ejercicio:** el botón muestra una pregunta con opciones; al seleccionar una, se indica de inmediato acierto o error y se muestra la retroalimentación.
+- [ ] **Enlaces y recursos:** `index.html` carga correctamente `css/styles.css`, `js/data.js`, `js/ai.js` y `js/app.js`.
+- [ ] **Consola:** no aparecen errores en la consola del navegador durante las interacciones básicas.
+
+## Tecnologías y convenciones
+
+- Proyecto construido con **HTML5, CSS3 y JavaScript ES6+ puro** (sin frameworks pesados).
+- Toda la **interfaz** y los **comentarios del código** están en **español**.
+- La lógica de IA permanece en `js/ai.js`, separada de la manipulación del DOM.
+- Revisa las reglas y convenciones del proyecto en [`AGENTS.md`](AGENTS.md).

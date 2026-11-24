@@ -5,7 +5,7 @@ function esperarSimulacion(milisegundos) {
   return new Promise((resolver) => setTimeout(resolver, milisegundos));
 }
 
-// Calcula un nivel de confianza simulado según la longitud del contenido
+// Calcula un nivel de confianza simulado según la claridad y longitud del contenido
 function calcularNivelConfianza(contenido) {
   const longitud = contenido ? contenido.trim().length : 0;
   if (longitud >= 90) {
@@ -17,23 +17,22 @@ function calcularNivelConfianza(contenido) {
   return 'Bajo';
 }
 
-// Construye una explicación académica breve para el análisis de veracidad
+// Construye una explicación académica breve para la validación matemática
 function construirExplicacionAcademica(publicacion, nivelConfianza) {
-  const materia = publicacion.materia || 'la materia indicada';
-  const base = `El contenido sobre ${materia} presenta una redacción `;
+  const tema = publicacion.materia || 'el tema matemático';
   if (nivelConfianza === 'Alto') {
-    return `${base}clara y con suficiente contexto para una revisión inicial favorable.`;
+    return `La explicación de ${tema} es clara y coherente; se recomienda contrastar con una fuente formal para reforzar la validez matemática.`;
   }
   if (nivelConfianza === 'Medio') {
-    return `${base}comprensible, pero se recomienda contrastar con fuentes académicas adicionales.`;
+    return `El contenido de ${tema} es comprensible, pero conviene revisar definiciones, pasos o ejemplos para confirmar su rigor matemático.`;
   }
-  return `${base}breve; es necesario ampliar información y verificar con fuentes especializadas.`;
+  return `La descripción de ${tema} es breve; se sugiere ampliar el desarrollo y verificar el procedimiento con material académico confiable.`;
 }
 
 // Verifica el rigor del contenido de una publicación
 async function verificarVeracidad(publicacion) {
   // Punto de extensión: aquí podría realizarse una llamada a una API externa con la misma interfaz
-  await esperarSimulacion(400);
+  await esperarSimulacion(350);
   const nivelConfianza = calcularNivelConfianza(publicacion.contenido || '');
   const explicacionAcademica = construirExplicacionAcademica(publicacion, nivelConfianza);
   return {
@@ -42,25 +41,25 @@ async function verificarVeracidad(publicacion) {
   };
 }
 
-// Crea opciones de respuesta simuladas para un ejercicio
+// Crea opciones de práctica simuladas para un ejercicio matemático
 function crearOpcionesEjercicio(publicacion) {
-  const tema = publicacion.titulo || publicacion.materia || 'el tema';
+  const tema = publicacion.titulo || publicacion.materia || 'este tema';
   return [
-    `Resume correctamente la idea principal de ${tema}.`,
-    `Presenta una afirmación no relacionada con ${tema}.`,
-    `Contradice la información central expuesta en ${tema}.`
+    `Identifica correctamente la idea matemática central de ${tema}.`,
+    `Describe una propiedad que no corresponde al concepto presentado en ${tema}.`,
+    `Confunde el procedimiento o resultado principal relacionado con ${tema}.`
   ];
 }
 
 // Genera un ejercicio de aprendizaje basado en la publicación
 async function generarEjercicio(publicacion) {
   // Punto de extensión: aquí podría realizarse una llamada a una API externa con la misma interfaz
-  await esperarSimulacion(400);
+  await esperarSimulacion(350);
   const opciones = crearOpcionesEjercicio(publicacion);
   return {
-    pregunta: `¿Cuál opción describe mejor el contenido sobre "${publicacion.titulo || 'este tema'}"?`,
+    pregunta: `¿Cuál opción representa mejor el concepto de "${publicacion.titulo || 'este tema'}"?`,
     opciones,
     indiceCorrecto: 0,
-    retroalimentacion: 'La opción correcta identifica la idea principal presentada en la publicación y se alinea con su contenido.'
+    retroalimentacion: 'La respuesta correcta resume la idea matemática principal de la publicación y es coherente con su explicación.'
   };
 }

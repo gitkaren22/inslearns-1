@@ -1,7 +1,10 @@
 // Lógica principal de la aplicación: interfaz, eventos y orquestación
 
 let seccionActual = 'feed';
+let temaSeleccionadoFeed = 'todos';
+const respuestasEjercicio = {};
 
+// Obtiene un elemento del DOM por su identificador
 function obtenerElemento(id) {
   return document.getElementById(id);
 }
@@ -52,7 +55,6 @@ function mostrarRegistro() {
   obtenerElemento('seccion-registro').classList.remove('oculto');
   obtenerElemento('seccion-feed').classList.add('oculto');
   obtenerElemento('seccion-cuaderno').classList.add('oculto');
-  obtenerElemento('seccion-feed').classList.remove('feed-visible');
   cerrarModalPublicar();
   mostrarNavegacion(false);
 }
@@ -100,21 +102,16 @@ function leerUsuarioDesdeFormulario() {
 // Actualiza el resumen del perfil en el feed
 function mostrarResumenPerfil(usuario) {
   const resumen = obtenerElemento('resumen-perfil');
-  const materias = usuario.materiasSeleccionadas.join(', ') || 'Sin materias';
-  resumen.textContent = `${usuario.nombre} · ${usuario.carrera} · Materias: ${materias}`;
+  const materias = usuario.materiasSeleccionadas.join(', ') || 'Sin temas seleccionados';
+  resumen.textContent = `${usuario.nombre} · ${usuario.carrera} · Temas: ${materias}`;
 }
 
-// Abre el modal para publicar un nuevo apunte
+// Abre y cierra el modal de publicación
 function abrirModalPublicar() {
   obtenerElemento('modal-publicar').classList.remove('oculto');
 }
-
-// Cierra el modal de publicación
 function cerrarModalPublicar() {
-  const modal = obtenerElemento('modal-publicar');
-  if (modal) {
-    modal.classList.add('oculto');
-  }
+  obtenerElemento('modal-publicar').classList.add('oculto');
 }
 
 // Genera un identificador único para una publicación
@@ -138,19 +135,19 @@ function crearPublicacionDesdeFormulario() {
   };
 }
 
-// Guarda un nuevo apunte y lo agrega al inicio del feed
+// Guarda un nuevo apunte y actualiza la vista
 function manejarEnvioPublicacion(evento) {
   evento.preventDefault();
   const publicaciones = obtenerPublicaciones();
-  const nuevaPublicacion = crearPublicacionDesdeFormulario();
-  publicaciones.unshift(nuevaPublicacion);
+  publicaciones.unshift(crearPublicacionDesdeFormulario());
   guardarPublicaciones(publicaciones);
   evento.target.reset();
   cerrarModalPublicar();
+  actualizarSelectorTemas();
   mostrarSeccionPrincipal('feed');
 }
 
-// Guarda el perfil y muestra la app con transición
+// Guarda el perfil y muestra la app
 function manejarEnvioRegistro(evento) {
   evento.preventDefault();
   const usuario = leerUsuarioDesdeFormulario();
@@ -185,12 +182,42 @@ function sincronizarGuardados(guardados, idPublicacion, estaGuardado) {
   }
 }
 
+// Obtiene los temas disponibles en las publicaciones
+function obtenerTemasDisponibles() {
+  const temas = obtenerPublicaciones().map((publicacion) => publicacion.materia).filter(Boolean);
+  return [...new Set(temas)];
+}
+
+// Actualiza las opciones del filtro por tema en el feed
+function actualizarSelectorTemas() {
+  const selector = obtenerElemento('filtro-tema-feed');
+  const temas = obtenerTemasDisponibles();
+  const opciones = ['<option value="todos">Todos los temas</option>'];
+  temas.forEach((tema) => {
+    const seleccionado = tema === temaSeleccionadoFeed ? 'selected' : '';
+    opciones.push(`<option value="${tema}" ${seleccionado}>${tema}</option>`);
+  });
+  selector.innerHTML = opciones.join('');
+  selector.value = temas.includes(temaSeleccionadoFeed) ? temaSeleccionadoFeed : 'todos';
+  temaSeleccionadoFeed = selector.value;
+}
+
+// Filtra publicaciones del feed por tema seleccionado
+function obtenerPublicacionesFiltradasFeed() {
+  const publicaciones = obtenerPublicaciones();
+  if (temaSeleccionadoFeed === 'todos') {
+    return publicaciones;
+  }
+  return publicaciones.filter((publicacion) => publicacion.materia === temaSeleccionadoFeed);
+}
+
 // Renderiza la vista activa (feed o cuaderno)
 function renderizarVistaActual() {
   if (seccionActual === 'cuaderno') {
     renderizarCuaderno();
     return;
   }
+  actualizarSelectorTemas();
   renderizarPublicaciones();
 }
 
@@ -219,24 +246,51 @@ function crearHtmlVeracidad(veracidad) {
   if (!veracidad) {
     return '';
   }
-  return `<div class="resultado-ia"><h4>Veracidad</h4>
+  return `<div class="resultado-ia"><h4>Validación matemática</h4>
     <p><strong>Nivel de confianza:</strong> ${veracidad.nivelConfianza}</p>
     <p>${veracidad.explicacionAcademica}</p></div>`;
 }
 
-// Crea el HTML del ejercicio generado
-function crearHtmlEjercicio(ejercicio) {
+// Crea el HTML de una opción interactiva del ejercicio
+function crearHtmlOpcionEjercicio(idPublicacion, opcion, indice, ejercicio, seleccion) {
+  const clases = ['boton-opcion'];
+  if (seleccion === indice && indice === ejercicio.indiceCorrecto) {
+    clases.push('correcta');
+  }
+  if (seleccion === indice && indice !== ejercicio.indiceCorrecto) {
+    clases.push('incorrecta');
+  }
+  return `<button type="button" class="${clases.join(' ')}" data-accion="opcion" data-indice="${indice}" data-id="${idPublicacion}">${opcion}</button>`;
+}
+
+// Crea el HTML del bloque de práctica interactiva
+function crearHtmlEjercicio(idPublicacion, ejercicio) {
   if (!ejercicio) {
     return '';
   }
+  const seleccion = respuestasEjercicio[idPublicacion];
   const opciones = ejercicio.opciones.map((opcion, indice) => {
-    const clase = indice === ejercicio.indiceCorrecto ? 'opcion-correcta' : '';
-    return `<li class="${clase}">${opcion}</li>`;
+    return crearHtmlOpcionEjercicio(idPublicacion, opcion, indice, ejercicio, seleccion);
   }).join('');
-  return `<div class="resultado-ia"><h4>Ejercicio</h4>
+  let retro = '<p>Selecciona una opción para recibir respuesta inmediata.</p>';
+  if (seleccion !== undefined) {
+    const acierto = seleccion === ejercicio.indiceCorrecto;
+    const clase = acierto ? 'mensaje-acierto' : 'mensaje-error';
+    const texto = acierto ? '¡Correcto!' : 'Respuesta incorrecta.';
+    retro = `<p class="${clase}">${texto}</p><p><strong>Retroalimentación:</strong> ${ejercicio.retroalimentacion}</p>`;
+  }
+  return `<div class="resultado-ia"><h4>Práctica interactiva</h4>
     <p><strong>Pregunta:</strong> ${ejercicio.pregunta}</p>
-    <ol class="lista-opciones">${opciones}</ol>
-    <p><strong>Retroalimentación:</strong> ${ejercicio.retroalimentacion}</p></div>`;
+    <div class="lista-opciones-practica">${opciones}</div>${retro}</div>`;
+}
+
+// Crea el HTML del diagrama asociado a la publicación
+function crearHtmlDiagrama(idPublicacion) {
+  const diagrama = typeof obtenerDiagramaPorId === 'function' ? obtenerDiagramaPorId(idPublicacion) : '';
+  if (!diagrama) {
+    return '';
+  }
+  return `<div class="contenedor-diagrama">${diagrama}</div>`;
 }
 
 // Crea la tarjeta HTML de una publicación
@@ -248,16 +302,17 @@ function crearTarjetaPublicacion(publicacion) {
       <h3 class="autor-publicacion">${publicacion.autor}</h3>
       <span class="etiqueta-materia">${publicacion.materia}</span>
     </div>
+    ${crearHtmlDiagrama(publicacion.id)}
     <h4 class="titulo-publicacion">${publicacion.titulo}</h4>
     <p class="contenido-publicacion">${publicacion.contenido}</p>
     <div class="barra-acciones">
-      <button class="boton-accion" data-accion="like">Me gusta (${publicacion.likes})</button>
-      <button class="${claseGuardar}" data-accion="guardar">${textoGuardar}</button>
-      <button class="boton-accion" data-accion="verificar">Verificar veracidad</button>
-      <button class="boton-accion" data-accion="ejercicio">Generar ejercicio</button>
+      <button type="button" class="boton-accion" data-accion="like">Me gusta (${publicacion.likes})</button>
+      <button type="button" class="${claseGuardar}" data-accion="guardar">${textoGuardar}</button>
+      <button type="button" class="boton-accion" data-accion="verificar">Verificar veracidad</button>
+      <button type="button" class="boton-accion" data-accion="practicar">Practicar ejercicio</button>
     </div>
     ${crearHtmlVeracidad(publicacion.veracidad)}
-    ${crearHtmlEjercicio(publicacion.ejercicio)}
+    ${crearHtmlEjercicio(publicacion.id, publicacion.ejercicio)}
   </article>`;
 }
 
@@ -271,9 +326,10 @@ function renderizarListaPublicaciones(idContenedor, publicaciones, mensajeVacio)
   contenedor.innerHTML = publicaciones.map(crearTarjetaPublicacion).join('');
 }
 
-// Renderiza todas las publicaciones en el feed
+// Renderiza todas las publicaciones filtradas en el feed
 function renderizarPublicaciones() {
-  renderizarListaPublicaciones('contenedor-publicaciones', obtenerPublicaciones(), 'No hay publicaciones disponibles.');
+  const publicaciones = obtenerPublicacionesFiltradasFeed();
+  renderizarListaPublicaciones('contenedor-publicaciones', publicaciones, 'No hay publicaciones para este tema.');
 }
 
 // Filtra publicaciones guardadas según el texto ingresado
@@ -294,7 +350,7 @@ function renderizarCuaderno() {
   const filtro = obtenerElemento('filtro-cuaderno').value || '';
   const guardadas = obtenerPublicaciones().filter((publicacion) => publicacion.guardado);
   const filtradas = filtrarGuardados(guardadas, filtro);
-  const mensaje = guardadas.length ? 'No hay resultados para el filtro.' : 'Aún no tienes apuntes guardados.';
+  const mensaje = guardadas.length ? 'No hay resultados para el filtro.' : 'Aún no tienes apuntes guardados en Mi Cuaderno.';
   renderizarListaPublicaciones('contenedor-guardados', filtradas, mensaje);
 }
 
@@ -310,20 +366,38 @@ async function procesarVeracidad(idPublicacion) {
   renderizarVistaActual();
 }
 
-// Ejecuta la generación de ejercicio y actualiza la publicación
-async function procesarEjercicio(idPublicacion) {
+// Asegura que exista un ejercicio para practicar y actualiza la vista
+async function procesarPractica(idPublicacion) {
   const publicaciones = obtenerPublicaciones();
   const publicacion = buscarPublicacion(publicaciones, idPublicacion);
   if (!publicacion) {
     return;
   }
-  publicacion.ejercicio = await generarEjercicio(publicacion);
-  guardarPublicaciones(publicaciones);
+  if (!publicacion.ejercicio) {
+    publicacion.ejercicio = await generarEjercicio(publicacion);
+    guardarPublicaciones(publicaciones);
+  }
   renderizarVistaActual();
 }
 
-// Maneja los clics de acciones dentro de tarjetas
+// Registra la respuesta seleccionada en una práctica interactiva
+function manejarSeleccionOpcion(boton) {
+  const idPublicacion = boton.dataset.id;
+  const indice = Number(boton.dataset.indice);
+  if (!idPublicacion || Number.isNaN(indice)) {
+    return;
+  }
+  respuestasEjercicio[idPublicacion] = indice;
+  renderizarVistaActual();
+}
+
+// Maneja los clics de acciones y opciones dentro de tarjetas
 function manejarAccionPublicacion(evento) {
+  const botonOpcion = evento.target.closest('button[data-accion="opcion"]');
+  if (botonOpcion) {
+    manejarSeleccionOpcion(botonOpcion);
+    return;
+  }
   const boton = evento.target.closest('button[data-accion]');
   const tarjeta = evento.target.closest('.tarjeta-publicacion');
   if (!boton || !tarjeta) {
@@ -337,9 +411,21 @@ function manejarAccionPublicacion(evento) {
   if (accion === 'verificar') {
     procesarVeracidad(idPublicacion);
   }
-  if (accion === 'ejercicio') {
-    procesarEjercicio(idPublicacion);
+  if (accion === 'practicar') {
+    procesarPractica(idPublicacion);
   }
+}
+
+// Maneja el doble clic para dar me gusta a una publicación
+function manejarDobleClicPublicacion(evento) {
+  if (evento.target.closest('button, a, input, select, textarea')) {
+    return;
+  }
+  const tarjeta = evento.target.closest('.tarjeta-publicacion');
+  if (!tarjeta) {
+    return;
+  }
+  actualizarInteraccion(tarjeta.dataset.id, 'like');
 }
 
 // Maneja la navegación inferior
@@ -365,18 +451,27 @@ function mostrarFeedDirecto() {
   feed.classList.add('feed-visible');
 }
 
+// Maneja el cambio del filtro por tema en el feed
+function manejarCambioTema(evento) {
+  temaSeleccionadoFeed = evento.target.value;
+  renderizarPublicaciones();
+}
+
 // Configura eventos principales de la interfaz
 function configurarEventos() {
   obtenerElemento('formulario-registro').addEventListener('submit', manejarEnvioRegistro);
   obtenerElemento('boton-editar-perfil').addEventListener('click', mostrarRegistro);
   obtenerElemento('contenedor-publicaciones').addEventListener('click', manejarAccionPublicacion);
   obtenerElemento('contenedor-guardados').addEventListener('click', manejarAccionPublicacion);
+  obtenerElemento('contenedor-publicaciones').addEventListener('dblclick', manejarDobleClicPublicacion);
+  obtenerElemento('contenedor-guardados').addEventListener('dblclick', manejarDobleClicPublicacion);
   obtenerElemento('grupo-materias').addEventListener('click', manejarClicChip);
   obtenerElemento('grupo-intereses').addEventListener('click', manejarClicChip);
   obtenerElemento('barra-navegacion').addEventListener('click', manejarNavegacion);
   obtenerElemento('boton-cerrar-modal').addEventListener('click', cerrarModalPublicar);
   obtenerElemento('formulario-publicar').addEventListener('submit', manejarEnvioPublicacion);
   obtenerElemento('filtro-cuaderno').addEventListener('input', renderizarCuaderno);
+  obtenerElemento('filtro-tema-feed').addEventListener('change', manejarCambioTema);
 }
 
 // Inicializa la aplicación según el estado guardado
@@ -384,6 +479,7 @@ function iniciarAplicacion() {
   const usuario = obtenerUsuario();
   cargarUsuarioEnFormulario(usuario);
   configurarEventos();
+  actualizarSelectorTemas();
   const tienePerfil = usuario.nombre && usuario.carrera;
   if (tienePerfil) {
     mostrarResumenPerfil(usuario);
