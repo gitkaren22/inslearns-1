@@ -354,7 +354,7 @@ function renderizarCuaderno() {
   renderizarListaPublicaciones('contenedor-guardados', filtradas, mensaje);
 }
 
-// Ejecuta la verificación de IA y actualiza la publicación
+// Despliega el panel de validación matemática para un apunte
 async function procesarVeracidad(idPublicacion) {
   const publicaciones = obtenerPublicaciones();
   const publicacion = buscarPublicacion(publicaciones, idPublicacion);
@@ -366,7 +366,7 @@ async function procesarVeracidad(idPublicacion) {
   renderizarVistaActual();
 }
 
-// Asegura que exista un ejercicio para practicar y actualiza la vista
+// Despliega el panel de práctica interactiva para un apunte
 async function procesarPractica(idPublicacion) {
   const publicaciones = obtenerPublicaciones();
   const publicacion = buscarPublicacion(publicaciones, idPublicacion);
@@ -379,6 +379,8 @@ async function procesarPractica(idPublicacion) {
   }
   renderizarVistaActual();
 }
+
+/* Las funciones procesarVeracidad y procesarPractica se definen junto a la gestión de Mi Cuaderno. */
 
 // Registra la respuesta seleccionada en una práctica interactiva
 function manejarSeleccionOpcion(boton) {

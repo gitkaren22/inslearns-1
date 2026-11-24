@@ -1,63 +1,74 @@
 # Inslearns — Matemáticas Cyberpunk
 
-**Inslearns** es una red social educativa interactiva estilo Instagram, en su versión **Matemáticas Cyberpunk**, centrada en el aprendizaje de matemáticas mediante publicaciones visuales con diagramas, validación de contenido y práctica interactiva.
+**Inslearns** es una aplicación educativa interactiva estilo Instagram, en su versión **Matemáticas Cyberpunk**, enfocada en Matemáticas. Permite a los estudiantes consultar apuntes de clase, interactuar con ellos y guardarlos en **«Mi Cuaderno»** dentro de una experiencia visual mobile-first.
 
-La aplicación ofrece un feed mobile-first con tarjetas educativas donde se pueden explorar conceptos de álgebra, geometría, trigonometría, cálculo y estadística, interactuar con cada publicación y guardar apuntes en un cuaderno personal con persistencia local.
+La aplicación ofrece un feed con tarjetas educativas donde se exploran contenidos de **Álgebra**, **Geometría**, **Trigonometría**, **Cálculo** y **Probabilidad**, con diagramas o tarjetas visuales, validación matemática simulada y práctica interactiva.
 
 ## Descripción
 
 Inslearns combina la dinámica de una red social con herramientas de estudio:
 
-- **Feed educativo de matemáticas:** publicaciones con autor, tema, contenido breve y diagramas o imágenes visuales para apoyar la comprensión.
-- **Interacción social de aprendizaje:** me gusta por botón o doble clic, y guardado de apuntes favoritos.
-- **Organización personal:** vista **Mi Cuaderno** para consultar las publicaciones guardadas.
-- **Apoyo con IA (simulada/local):** verificación de veracidad del contenido y ejercicios interactivos de práctica con retroalimentación inmediata.
+- **Feed educativo de matemáticas:** apuntes de clase con autor, tema, contenido estructurado y apoyo visual (diagramas/tarjetas).
+- **Interacción de aprendizaje:** me gusta por botón o doble clic, y guardado de apuntes en «Mi Cuaderno».
+- **Organización personal:** vista **«Mi Cuaderno»** para listar, filtrar y gestionar los apuntes guardados.
+- **Apoyo con IA (simulada/local):** verificación de veracidad matemática y ejercicios interactivos con retroalimentación inmediata.
+- **Persistencia local:** conservación del perfil, publicaciones y estados en `localStorage`.
+
+## Apuntes de clase incluidos
+
+La aplicación carga 5 apuntes matemáticos de clase con diagramas o tarjetas visuales:
+
+- **Álgebra / Pendiente**
+- **Geometría / Pitágoras**
+- **Trigonometría / Razones trigonométricas**
+- **Cálculo / Derivadas básicas**
+- **Probabilidad / Regla básica**
+
+Cada apunte incluye: **fórmulas**, **explicación**, **ejemplo** y **nota de cuidado**.
 
 ## Estética
 
-La interfaz utiliza una **estética cyberpunk** coherente y enfocada en la legibilidad:
-
-- **Fondo oscuro** con degradados profundos para resaltar el contenido.
-- **Acentos neón** en **cian**, **magenta**, **amarillo** y **verde** para botones, bordes, etiquetas y estados.
-- **Enfoque mobile-first** con contenedor centrado y ancho máximo de **480px** en escritorio, simulando una experiencia de aplicación móvil.
-- **Tarjetas limpias** con jerarquía visual clara: autor, tema, diagrama, título, contenido y barra de acciones.
-- **Sin estilos en línea:** toda la presentación se define en `css/styles.css`.
+- **Fondo oscuro** con acentos neón en **cian, magenta, amarillo y verde**.
+- **Diseño mobile-first** con contenedor centrado y ancho máximo de **480px** en escritorio.
+- **Tarjetas limpias** con jerarquía visual clara: autor, tema, visual, título, contenido y barra de acciones.
+- **Sin estilos en línea:** toda la presentación se define en [css/styles.css](css/styles.css).
 
 ## Funcionalidades principales
 
-- Al menos **5 publicaciones de matemáticas** precargadas con diagramas/imágenes visuales.
-- **Filtro por tema** en el feed para explorar contenidos específicos.
+- **5 apuntes de Matemáticas** precargados con diagramas o tarjetas visuales.
+- **Filtro por tema** en el feed.
 - **Me gusta** mediante botón o doble clic sobre la tarjeta.
-- **Botón Guardar** para marcar o desmarcar publicaciones.
-- **Vista Mi Cuaderno** con publicaciones guardadas y filtro por tema o título.
-- **Persistencia en `localStorage`** para usuario, publicaciones y guardados.
-- **Verificador de veracidad** por publicación con validación matemática simulada.
-- **Ejercicios interactivos** con opciones de práctica y respuesta inmediata de acierto o error.
+- **Botón Guardar** para marcar o desmarcar apuntes.
+- **Vista «Mi Cuaderno»** para listar y gestionar apuntes guardados, con filtro por tema o título.
+- **Persistencia en `localStorage`**:
+  - `inslearns_user`: perfil del estudiante.
+  - `inslearns_posts`: colección de apuntes/publicaciones.
+  - `inslearns_math_saved`: identificadores de apuntes guardados en «Mi Cuaderno».
+  - `inslearns_math_likes`: contadores de «me gusta» por apunte.
 
-## Verificador de veracidad
+## Paneles de IA
 
-Cada tarjeta incluye el botón **"Verificar veracidad"**, que ejecuta la lógica definida en `js/ai.js` para evaluar el contenido de la publicación.
+Cada apunte incluye dos acciones con paneles desplegables dentro de la tarjeta:
 
-- **Entrada:** el objeto de la publicación (`Publicacion`).
-- **Salida:** un resultado con:
-  - `nivelConfianza`: indica el nivel de confianza del análisis.
-  - `explicacionAcademica`: breve explicación o validación matemática del contenido.
-- **Comportamiento en la interfaz:** al presionar el botón, se muestra en la tarjeta un bloque de **Validación matemática** con el nivel de confianza y la explicación. El resultado se guarda en la publicación y persiste en `localStorage`.
+### 1. Verificar veracidad
+- **Botón:** `Verificar veracidad`
+- **Módulo:** [js/ai.js](js/ai.js) (separado de la manipulación del DOM)
+- **Función:** `verificarVeracidad(post)`
+- **Panel mostrado:** **Validación matemática**
+  - **Nivel de confianza**
+  - **Explicación académica**
+- **Objetivo:** evaluar el rigor y la coherencia matemática del contenido del apunte.
 
-La implementación actual funciona en **modo simulado local**, con la misma interfaz preparada para una posible integración con una API externa.
-
-## Ejercicios interactivos
-
-Cada tarjeta incluye el botón **"Practicar ejercicio"**, que genera o muestra una práctica asociada al contenido de la publicación.
-
-- **Generación:** si la publicación no tiene ejercicio, `js/ai.js` crea uno con:
-  - `pregunta`
-  - `opciones`
-  - `indiceCorrecto`
-  - `retroalimentacion`
-- **Interacción:** las opciones se presentan como botones seleccionables dentro de la tarjeta.
-- **Respuesta inmediata:** al elegir una opción, la interfaz indica de forma inmediata si la respuesta es **correcta** o **incorrecta** y muestra la retroalimentación correspondiente.
-- **Persistencia:** el ejercicio generado se guarda en la publicación dentro de `localStorage`; la selección realizada en la práctica se maneja en la sesión actual para una experiencia interactiva.
+### 2. Practicar ejercicio
+- **Botón:** `Practicar ejercicio`
+- **Módulo:** [js/ai.js](js/ai.js)
+- **Función:** `generarEjercicio(post)`
+- **Panel mostrado:** **Práctica interactiva**
+  - **Pregunta**
+  - **Opciones** seleccionables
+  - **Respuesta inmediata** de acierto o error
+  - **Retroalimentación**
+- **Objetivo:** reforzar el aprendizaje con una práctica breve basada en el apunte.
 
 ## Estructura de carpetas
 
@@ -76,11 +87,11 @@ Cada tarjeta incluye el botón **"Practicar ejercicio"**, que genera o muestra u
 
 ### Descripción de archivos
 
-- `index.html`: estructura semántica de la interfaz y punto de entrada de la aplicación.
-- `css/styles.css`: estilos principales, paleta cyberpunk, diseño mobile-first y componentes visuales.
-- `js/app.js`: lógica de interfaz, eventos, filtros, interacciones, renderizado y orquestación.
-- `js/data.js`: modelos, datos iniciales de matemáticas, diagramas visuales y persistencia en `localStorage`.
-- `js/ai.js`: módulo de IA para verificación de veracidad y generación de ejercicios, separado de la manipulación del DOM.
+- [index.html](index.html): estructura semántica de la interfaz y punto de entrada de la aplicación.
+- [css/styles.css](css/styles.css): estilos principales, paleta cyberpunk, diseño mobile-first y componentes visuales.
+- [js/app.js](js/app.js): lógica de interfaz, eventos, filtros, interacciones, renderizado y orquestación.
+- [js/data.js](js/data.js): modelos, apuntes iniciales, diagramas visuales y persistencia en `localStorage`.
+- [js/ai.js](js/ai.js): lógica de IA para verificación de veracidad matemática y generación de ejercicios con retroalimentación.
 
 ## Cómo ejecutarlo
 
@@ -119,24 +130,24 @@ Cada tarjeta incluye el botón **"Practicar ejercicio"**, que genera o muestra u
 5. Abre el puerto **8000** desde la pestaña **Ports** o con el botón **Open in Browser**.
 6. Interactúa con la aplicación desde el navegador.
 
-## Checklist de pruebas rápidas
+## Guía rápida de pruebas
 
-- [ ] **Carga inicial:** la aplicación abre sin errores visibles y muestra la pantalla de registro o el feed según el estado guardado.
-- [ ] **Publicaciones de matemáticas:** el feed muestra al menos 5 publicaciones con tema, contenido y diagrama/visual.
-- [ ] **Filtro por tema:** al cambiar el filtro en el feed, solo se muestran las publicaciones del tema seleccionado.
-- [ ] **Me gusta por botón:** el contador de "Me gusta" aumenta al presionar el botón en una tarjeta.
-- [ ] **Me gusta por doble clic:** el contador aumenta al hacer doble clic sobre una tarjeta.
-- [ ] **Guardar:** el botón "Guardar" cambia de estado y la publicación se agrega o quita de Mi Cuaderno.
-- [ ] **Mi Cuaderno:** la vista muestra las publicaciones guardadas y permite filtrarlas por tema o título.
-- [ ] **Persistencia:** al recargar la página, se conservan el perfil, las publicaciones, los likes/guardados y el contenido de Mi Cuaderno en `localStorage`.
-- [ ] **Verificar veracidad:** el botón muestra la validación matemática con nivel de confianza y explicación académica.
-- [ ] **Practicar ejercicio:** el botón muestra una pregunta con opciones; al seleccionar una, se indica de inmediato acierto o error y se muestra la retroalimentación.
-- [ ] **Enlaces y recursos:** `index.html` carga correctamente `css/styles.css`, `js/data.js`, `js/ai.js` y `js/app.js`.
-- [ ] **Consola:** no aparecen errores en la consola del navegador durante las interacciones básicas.
+1. **Carga inicial:** abre la app y verifica que se muestre el registro o el feed sin errores visibles.
+2. **Apuntes precargados:** confirma que el feed muestre los 5 apuntes de **Álgebra, Geometría, Trigonometría, Cálculo y Probabilidad** con visual/diagrama.
+3. **Filtro por tema:** en el feed, selecciona un tema y comprueba que solo aparezcan los apuntes correspondientes.
+4. **Me gusta (botón):** pulsa `Me gusta` en un apunte y verifica que el contador aumente.
+5. **Me gusta (doble clic):** haz doble clic sobre una tarjeta y verifica que el contador aumente.
+6. **Guardar apunte:** pulsa `Guardar` y comprueba que el estado cambie a `Guardado`.
+7. **Mi Cuaderno:** entra a `Mi Cuaderno` y verifica que aparezca el apunte guardado; usa el filtro por tema o título.
+8. **Quitar de Mi Cuaderno:** pulsa `Guardado` para desmarcar y confirma que el apunte se retire del listado (o cambie su estado).
+9. **Panel Verificar veracidad:** pulsa `Verificar veracidad` y comprueba que se despliegue la **Validación matemática** con nivel de confianza y explicación académica.
+10. **Panel Practicar ejercicio:** pulsa `Practicar ejercicio`, elige una opción y verifica la **respuesta inmediata** de acierto o error con retroalimentación.
+11. **Persistencia:** recarga la página y confirma que se conserven perfil, apuntes, likes, guardados y resultados generados en `localStorage`.
+12. **Consola y recursos:** revisa que no haya errores en consola y que `index.html` cargue correctamente `css/styles.css`, `js/data.js`, `js/ai.js` y `js/app.js`.
 
 ## Tecnologías y convenciones
 
 - Proyecto construido con **HTML5, CSS3 y JavaScript ES6+ puro** (sin frameworks pesados).
 - Toda la **interfaz** y los **comentarios del código** están en **español**.
-- La lógica de IA permanece en `js/ai.js`, separada de la manipulación del DOM.
-- Revisa las reglas y convenciones del proyecto en [`AGENTS.md`](AGENTS.md).
+- La lógica de IA permanece en [js/ai.js](js/ai.js), separada de la manipulación del DOM.
+- Revisa las reglas y convenciones del proyecto en [AGENTS.md](AGENTS.md).
