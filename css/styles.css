@@ -1,18 +1,17 @@
-/* Estilos principales de Inslearns con estética cyberpunk e interacción mobile-first */
+/* Estilos principales de Inslearns: estética cyberpunk, mobile-first y sin estilos en línea */
 :root {
-  --fondo-principal: #050510;
-  --fondo-tarjeta: #0d1224;
-  --fondo-panel: rgba(10, 14, 30, 0.94);
+  --fondo-principal: #05070f;
+  --fondo-panel: rgba(10, 14, 28, 0.96);
+  --fondo-tarjeta: #0b1224;
   --texto-principal: #e6f7ff;
   --texto-secundario: #9db3c9;
   --neon-cian: #00f0ff;
   --neon-magenta: #ff00e6;
   --neon-amarillo: #ffee00;
-  --neon-violeta: #8a2be2;
-  --borde-marcado: rgba(0, 240, 255, 0.55);
-  --sombra-neon: 0 0 14px rgba(0, 240, 255, 0.35);
+  --neon-verde: #39ff14;
+  --borde-cian: rgba(0, 240, 255, 0.5);
+  --sombra-cian: 0 0 14px rgba(0, 240, 255, 0.35);
   --sombra-magenta: 0 0 14px rgba(255, 0, 230, 0.35);
-  --sombra-amarillo: 0 0 14px rgba(255, 238, 0, 0.35);
 }
 
 * {
@@ -24,7 +23,7 @@ body {
   min-height: 100vh;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: var(--texto-principal);
-  background: radial-gradient(circle at top, #111936 0%, var(--fondo-principal) 55%);
+  background: radial-gradient(circle at top, #101633 0%, var(--fondo-principal) 55%);
 }
 
 .contenedor-aplicacion {
@@ -43,9 +42,8 @@ body {
 .logo {
   margin: 0;
   font-size: 2rem;
-  letter-spacing: 1px;
   color: var(--neon-cian);
-  text-shadow: 0 0 10px rgba(0, 240, 255, 0.7);
+  text-shadow: 0 0 12px rgba(0, 240, 255, 0.7);
 }
 
 .eslogan {
@@ -56,15 +54,15 @@ body {
 
 .panel {
   background: var(--fondo-panel);
-  border: 2px solid var(--borde-marcado);
+  border: 2px solid var(--borde-cian);
   border-radius: 16px;
   padding: 16px;
-  box-shadow: var(--sombra-neon), inset 0 0 18px rgba(0, 240, 255, 0.05);
+  box-shadow: var(--sombra-cian), inset 0 0 18px rgba(0, 240, 255, 0.05);
 }
 
 .panel-onboarding {
-  border-color: rgba(255, 0, 230, 0.5);
-  box-shadow: var(--sombra-magenta), 0 0 24px rgba(0, 240, 255, 0.12);
+  border-color: rgba(255, 0, 230, 0.55);
+  box-shadow: var(--sombra-magenta), 0 0 20px rgba(0, 240, 255, 0.12);
 }
 
 .oculto {
@@ -74,7 +72,7 @@ body {
 .panel-feed {
   opacity: 0;
   transform: translateY(12px);
-  transition: opacity 0.45s ease, transform 0.45s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .panel-feed.feed-visible {
@@ -94,7 +92,9 @@ body {
 }
 
 .formulario-registro label,
-.etiqueta-grupo {
+.etiqueta-grupo,
+.filtros-feed label,
+.filtros-cuaderno label {
   font-size: 0.9rem;
   color: var(--neon-cian);
   margin: 4px 0 0;
@@ -103,15 +103,16 @@ body {
 .formulario-registro input,
 .formulario-registro select,
 .formulario-registro textarea,
-.filtros-cuaderno input {
+.filtros-cuaderno input,
+.selector-tema {
   width: 100%;
   padding: 10px 12px;
   border-radius: 10px;
-  border: 1px solid rgba(138, 43, 226, 0.6);
-  background: #0a1020;
+  border: 1px solid rgba(57, 255, 20, 0.45);
+  background: #08101e;
   color: var(--texto-principal);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   font: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .formulario-registro textarea {
@@ -122,10 +123,11 @@ body {
 .formulario-registro input:focus,
 .formulario-registro select:focus,
 .formulario-registro textarea:focus,
-.filtros-cuaderno input:focus {
+.filtros-cuaderno input:focus,
+.selector-tema:focus {
   outline: none;
   border-color: var(--neon-amarillo);
-  box-shadow: 0 0 10px rgba(255, 238, 0, 0.25);
+  box-shadow: 0 0 10px rgba(255, 238, 0, 0.3);
 }
 
 .grupo-chips {
@@ -143,7 +145,7 @@ body {
   padding: 8px 12px;
   font-size: 0.85rem;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .chip:hover {
@@ -151,34 +153,29 @@ body {
   box-shadow: 0 0 10px rgba(255, 238, 0, 0.3);
 }
 
-.chip:active {
-  transform: scale(0.97);
-  box-shadow: 0 0 12px rgba(255, 0, 230, 0.35);
-}
-
 .chip-activo {
   border-color: var(--neon-magenta);
-  color: #fff4fb;
   background: rgba(255, 0, 230, 0.18);
-  box-shadow: 0 0 12px rgba(255, 0, 230, 0.45), 0 0 20px rgba(0, 240, 255, 0.2);
+  box-shadow: 0 0 12px rgba(255, 0, 230, 0.4);
 }
 
 .boton-principal,
 .boton-secundario,
-.boton-accion {
+.boton-accion,
+.boton-opcion {
   border: none;
   border-radius: 10px;
   padding: 10px 12px;
   cursor: pointer;
   font-weight: 600;
-  transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .boton-principal {
   margin-top: 8px;
   color: #041018;
-  background: linear-gradient(90deg, var(--neon-cian), var(--neon-amarillo));
-  box-shadow: 0 0 12px rgba(0, 240, 255, 0.45);
+  background: linear-gradient(90deg, var(--neon-cian), var(--neon-verde));
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
 }
 
 .boton-secundario {
@@ -189,16 +186,10 @@ body {
 
 .boton-principal:hover,
 .boton-secundario:hover,
-.boton-accion:hover {
+.boton-accion:hover,
+.boton-opcion:hover {
   transform: translateY(-1px);
-  box-shadow: 0 0 14px rgba(255, 238, 0, 0.35), 0 0 18px rgba(255, 0, 230, 0.2);
-}
-
-.boton-principal:active,
-.boton-secundario:active,
-.boton-accion:active {
-  transform: translateY(0);
-  box-shadow: 0 0 10px rgba(255, 0, 230, 0.4);
+  box-shadow: 0 0 14px rgba(255, 238, 0, 0.3), 0 0 12px rgba(255, 0, 230, 0.2);
 }
 
 .barra-superior-feed {
@@ -209,10 +200,17 @@ body {
   margin-bottom: 12px;
 }
 
+.filtros-feed,
+.filtros-cuaderno {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
 .contenedor-publicaciones {
   display: grid;
   gap: 14px;
-  max-height: 70vh;
+  max-height: 68vh;
   overflow-y: auto;
   padding-right: 4px;
 }
@@ -222,13 +220,12 @@ body {
   border: 2px solid rgba(255, 0, 230, 0.45);
   border-radius: 14px;
   padding: 14px;
-  box-shadow: 0 0 12px rgba(138, 43, 226, 0.25), inset 0 0 0 1px rgba(0, 240, 255, 0.08);
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 0 12px rgba(138, 43, 226, 0.2), inset 0 0 0 1px rgba(0, 240, 255, 0.08);
 }
 
 .tarjeta-publicacion:hover {
   border-color: rgba(255, 238, 0, 0.5);
-  box-shadow: 0 0 16px rgba(0, 240, 255, 0.2), 0 0 12px rgba(255, 0, 230, 0.2);
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.2), 0 0 12px rgba(57, 255, 20, 0.15);
 }
 
 .cabecera-tarjeta {
@@ -250,6 +247,20 @@ body {
   padding: 4px 8px;
   border-radius: 999px;
   white-space: nowrap;
+}
+
+.contenedor-diagrama {
+  margin: 10px 0;
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #060b16;
+}
+
+.contenedor-diagrama svg {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .titulo-publicacion {
@@ -279,15 +290,16 @@ body {
 }
 
 .boton-accion.activo {
-  border-color: var(--neon-magenta);
-  color: #ffd6fa;
+  border-color: var(--neon-verde);
+  color: #d9ffd1;
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.25);
 }
 
 .resultado-ia {
   margin-top: 10px;
   padding: 10px;
   border-radius: 10px;
-  background: rgba(8, 14, 30, 0.9);
+  background: rgba(8, 14, 30, 0.92);
   border: 1px solid rgba(0, 240, 255, 0.2);
 }
 
@@ -303,32 +315,41 @@ body {
   font-size: 0.9rem;
 }
 
-.lista-opciones {
-  margin: 8px 0 0;
-  padding-left: 18px;
-  color: var(--texto-secundario);
-}
-
-.opcion-correcta {
-  color: var(--exito);
-  font-weight: 600;
-}
-
-.pie-pagina {
-  text-align: center;
-  margin-top: 16px;
-  color: var(--texto-secundario);
-}
-
-.filtros-cuaderno {
+.lista-opciones-practica {
   display: grid;
-  gap: 6px;
-  margin-bottom: 12px;
+  gap: 8px;
+  margin-top: 8px;
 }
 
-.filtros-cuaderno label {
-  font-size: 0.9rem;
-  color: var(--neon-cian);
+.boton-opcion {
+  width: 100%;
+  text-align: left;
+  background: #0f1730;
+  color: var(--texto-principal);
+  border: 1px solid rgba(255, 0, 230, 0.35);
+  font-size: 0.85rem;
+}
+
+.boton-opcion.correcta {
+  border-color: var(--neon-verde);
+  color: #eaffea;
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.3);
+}
+
+.boton-opcion.incorrecta {
+  border-color: #ff4d6d;
+  color: #ffd9e0;
+  box-shadow: 0 0 10px rgba(255, 77, 109, 0.25);
+}
+
+.mensaje-acierto {
+  color: var(--neon-verde);
+  font-weight: 700;
+}
+
+.mensaje-error {
+  color: #ff6b8a;
+  font-weight: 700;
 }
 
 .mensaje-vacio {
@@ -340,7 +361,7 @@ body {
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(5, 5, 16, 0.82);
+  background: rgba(5, 7, 15, 0.86);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -383,7 +404,7 @@ body {
   gap: 8px;
   padding: 10px 12px;
   background: rgba(8, 12, 24, 0.98);
-  border-top: 2px solid var(--borde-marcado);
+  border-top: 2px solid var(--borde-cian);
   box-shadow: 0 -4px 18px rgba(0, 240, 255, 0.15);
   z-index: 20;
 }
@@ -400,16 +421,6 @@ body {
   padding: 10px 6px;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.boton-nav:hover {
-  border-color: var(--neon-amarillo);
-  box-shadow: 0 0 10px rgba(255, 238, 0, 0.25);
-}
-
-.boton-nav:active {
-  transform: scale(0.98);
 }
 
 .boton-nav.activo {
@@ -422,6 +433,12 @@ body {
   color: #041018;
   background: linear-gradient(90deg, var(--neon-cian), var(--neon-amarillo));
   border-color: transparent;
+}
+
+.pie-pagina {
+  text-align: center;
+  margin-top: 16px;
+  color: var(--texto-secundario);
 }
 
 @media (min-width: 481px) {

@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inslearns - Red social educativa</title>
+  <title>Inslearns - Matemáticas Cyberpunk</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <div class="contenedor-aplicacion">
     <header class="encabezado-principal">
       <h1 class="logo">Inslearns</h1>
-      <p class="eslogan">Aprende, verifica y practica en modo cyberpunk</p>
+      <p class="eslogan">Matemáticas cyberpunk: aprende con diagramas, verifica y practica</p>
     </header>
 
     <main>
       <section id="seccion-registro" class="panel panel-onboarding" aria-labelledby="titulo-registro">
         <h2 id="titulo-registro">Bienvenido a Inslearns</h2>
-        <p class="texto-apoyo">Ingresa tu nombre y selecciona tus materias e intereses para personalizar tu experiencia.</p>
+        <p class="texto-apoyo">Crea tu perfil para explorar publicaciones de matemáticas con apoyo visual.</p>
         <form id="formulario-registro" class="formulario-registro">
           <label for="campo-nombre">Nombre</label>
           <input id="campo-nombre" name="nombre" type="text" required placeholder="Tu nombre">
@@ -24,37 +24,41 @@
           <label for="campo-carrera">Carrera</label>
           <input id="campo-carrera" name="carrera" type="text" required placeholder="Tu carrera">
 
-          <p class="etiqueta-grupo">Materias</p>
-          <div id="grupo-materias" class="grupo-chips" role="group" aria-label="Selecciona tus materias">
-            <button type="button" class="chip" data-grupo="materias" data-valor="Matemáticas">Matemáticas</button>
-            <button type="button" class="chip" data-grupo="materias" data-valor="Historia">Historia</button>
-            <button type="button" class="chip" data-grupo="materias" data-valor="Biología">Biología</button>
-            <button type="button" class="chip" data-grupo="materias" data-valor="Programación">Programación</button>
-            <button type="button" class="chip" data-grupo="materias" data-valor="Física">Física</button>
-            <button type="button" class="chip" data-grupo="materias" data-valor="Química">Química</button>
+          <p class="etiqueta-grupo">Temas de matemáticas</p>
+          <div id="grupo-materias" class="grupo-chips" role="group" aria-label="Selecciona tus temas de matemáticas">
+            <button type="button" class="chip" data-grupo="materias" data-valor="Álgebra">Álgebra</button>
+            <button type="button" class="chip" data-grupo="materias" data-valor="Geometría">Geometría</button>
+            <button type="button" class="chip" data-grupo="materias" data-valor="Trigonometría">Trigonometría</button>
+            <button type="button" class="chip" data-grupo="materias" data-valor="Cálculo">Cálculo</button>
+            <button type="button" class="chip" data-grupo="materias" data-valor="Estadística">Estadística</button>
           </div>
 
           <p class="etiqueta-grupo">Intereses</p>
           <div id="grupo-intereses" class="grupo-chips" role="group" aria-label="Selecciona tus intereses">
-            <button type="button" class="chip" data-grupo="intereses" data-valor="Tecnología">Tecnología</button>
+            <button type="button" class="chip" data-grupo="intereses" data-valor="Diagramas">Diagramas</button>
+            <button type="button" class="chip" data-grupo="intereses" data-valor="Problemas">Problemas</button>
+            <button type="button" class="chip" data-grupo="intereses" data-valor="Lógica">Lógica</button>
             <button type="button" class="chip" data-grupo="intereses" data-valor="Ciencia">Ciencia</button>
-            <button type="button" class="chip" data-grupo="intereses" data-valor="Arte">Arte</button>
-            <button type="button" class="chip" data-grupo="intereses" data-valor="Música">Música</button>
-            <button type="button" class="chip" data-grupo="intereses" data-valor="Lectura">Lectura</button>
-            <button type="button" class="chip" data-grupo="intereses" data-valor="Videojuegos">Videojuegos</button>
+            <button type="button" class="chip" data-grupo="intereses" data-valor="Tecnología">Tecnología</button>
           </div>
 
-          <button type="submit" class="boton-principal boton-entrar">Entrar al Feed</button>
+          <button type="submit" class="boton-principal boton-entrar">Entrar al feed</button>
         </form>
       </section>
 
       <section id="seccion-feed" class="panel panel-feed oculto" aria-labelledby="titulo-feed">
         <div class="barra-superior-feed">
           <div>
-            <h2 id="titulo-feed">Feed educativo</h2>
+            <h2 id="titulo-feed">Feed de matemáticas</h2>
             <p id="resumen-perfil" class="texto-apoyo"></p>
           </div>
           <button id="boton-editar-perfil" type="button" class="boton-secundario">Editar perfil</button>
+        </div>
+        <div class="filtros-feed">
+          <label for="filtro-tema-feed">Filtrar por tema</label>
+          <select id="filtro-tema-feed" class="selector-tema">
+            <option value="todos">Todos los temas</option>
+          </select>
         </div>
         <div id="contenedor-publicaciones" class="contenedor-publicaciones" aria-live="polite"></div>
       </section>
@@ -62,12 +66,12 @@
       <section id="seccion-cuaderno" class="panel panel-cuaderno oculto" aria-labelledby="titulo-cuaderno">
         <div class="barra-superior-feed">
           <div>
-            <h2 id="titulo-cuaderno">Cuaderno de guardados</h2>
-            <p class="texto-apoyo">Revisa, filtra o quita tus apuntes guardados.</p>
+            <h2 id="titulo-cuaderno">Mi Cuaderno</h2>
+            <p class="texto-apoyo">Tus apuntes guardados de matemáticas, disponibles con persistencia local.</p>
           </div>
         </div>
         <div class="filtros-cuaderno">
-          <label for="filtro-cuaderno">Filtrar por materia o título</label>
+          <label for="filtro-cuaderno">Filtrar por tema o título</label>
           <input id="filtro-cuaderno" type="text" placeholder="Escribe para filtrar">
         </div>
         <div id="contenedor-guardados" class="contenedor-publicaciones" aria-live="polite"></div>
@@ -81,25 +85,21 @@
           <button id="boton-cerrar-modal" type="button" class="boton-secundario boton-cerrar" aria-label="Cerrar">Cerrar</button>
         </div>
         <form id="formulario-publicar" class="formulario-registro">
-          <label for="campo-materia-publicar">Materia</label>
+          <label for="campo-materia-publicar">Tema</label>
           <select id="campo-materia-publicar" name="materia" required>
-            <option value="">Selecciona una materia</option>
-            <option value="Matemáticas">Matemáticas</option>
-            <option value="Historia">Historia</option>
-            <option value="Biología">Biología</option>
-            <option value="Programación">Programación</option>
-            <option value="Física">Física</option>
-            <option value="Química">Química</option>
-            <option value="Tecnología">Tecnología</option>
-            <option value="Ciencia">Ciencia</option>
-            <option value="Arte">Arte</option>
+            <option value="">Selecciona un tema</option>
+            <option value="Álgebra">Álgebra</option>
+            <option value="Geometría">Geometría</option>
+            <option value="Trigonometría">Trigonometría</option>
+            <option value="Cálculo">Cálculo</option>
+            <option value="Estadística">Estadística</option>
           </select>
 
           <label for="campo-titulo-publicar">Título</label>
           <input id="campo-titulo-publicar" name="titulo" type="text" required placeholder="Título del apunte">
 
           <label for="campo-contenido-publicar">Contenido</label>
-          <textarea id="campo-contenido-publicar" name="contenido" rows="4" required placeholder="Escribe el contenido de tu apunte"></textarea>
+          <textarea id="campo-contenido-publicar" name="contenido" rows="4" required placeholder="Describe el concepto matemático"></textarea>
 
           <button type="submit" class="boton-principal">Guardar apunte</button>
         </form>
@@ -109,11 +109,11 @@
     <nav id="barra-navegacion" class="barra-navegacion oculto" aria-label="Navegación principal">
       <button type="button" class="boton-nav activo" data-seccion="feed" aria-label="Feed">Feed</button>
       <button type="button" class="boton-nav boton-nav-publicar" data-seccion="publicar" aria-label="Publicar">+ Publicar</button>
-      <button type="button" class="boton-nav" data-seccion="cuaderno" aria-label="Cuaderno">Cuaderno</button>
+      <button type="button" class="boton-nav" data-seccion="cuaderno" aria-label="Mi Cuaderno">Mi Cuaderno</button>
     </nav>
 
     <footer class="pie-pagina">
-      <small>Inslearns &mdash; Red social educativa interactiva</small>
+      <small>Inslearns &mdash; Red social educativa de Matemáticas Cyberpunk</small>
     </footer>
   </div>
 
