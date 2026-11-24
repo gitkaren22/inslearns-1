@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inslearns - Red social educativa</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="contenedor-aplicacion">
+    <header class="encabezado-principal">
+      <h1 class="logo">Inslearns</h1>
+      <p class="eslogan">Aprende, verifica y practica en modo cyberpunk</p>
+    </header>
+
+    <main>
+      <section id="seccion-registro" class="panel panel-onboarding" aria-labelledby="titulo-registro">
+        <h2 id="titulo-registro">Bienvenido a Inslearns</h2>
+        <p class="texto-apoyo">Ingresa tu nombre y selecciona tus materias e intereses para personalizar tu experiencia.</p>
+        <form id="formulario-registro" class="formulario-registro">
+          <label for="campo-nombre">Nombre</label>
+          <input id="campo-nombre" name="nombre" type="text" required placeholder="Tu nombre">
+
+          <label for="campo-carrera">Carrera</label>
+          <input id="campo-carrera" name="carrera" type="text" required placeholder="Tu carrera">
+
+          <p class="etiqueta-grupo">Materias</p>
+          <div id="grupo-materias" class="grupo-chips" role="group" aria-label="Selecciona tus materias">
+            <button type="button" class="chip" data-grupo="materias" data-valor="Matemáticas">Matemáticas</button>
+            <button type="button" class="chip" data-grupo="materias" data-valor="Historia">Historia</button>
+            <button type="button" class="chip" data-grupo="materias" data-valor="Biología">Biología</button>
+            <button type="button" class="chip" data-grupo="materias" data-valor="Programación">Programación</button>
+            <button type="button" class="chip" data-grupo="materias" data-valor="Física">Física</button>
+            <button type="button" class="chip" data-grupo="materias" data-valor="Química">Química</button>
+          </div>
+
+          <p class="etiqueta-grupo">Intereses</p>
+          <div id="grupo-intereses" class="grupo-chips" role="group" aria-label="Selecciona tus intereses">
+            <button type="button" class="chip" data-grupo="intereses" data-valor="Tecnología">Tecnología</button>
+            <button type="button" class="chip" data-grupo="intereses" data-valor="Ciencia">Ciencia</button>
+            <button type="button" class="chip" data-grupo="intereses" data-valor="Arte">Arte</button>
+            <button type="button" class="chip" data-grupo="intereses" data-valor="Música">Música</button>
+            <button type="button" class="chip" data-grupo="intereses" data-valor="Lectura">Lectura</button>
+            <button type="button" class="chip" data-grupo="intereses" data-valor="Videojuegos">Videojuegos</button>
+          </div>
+
+          <button type="submit" class="boton-principal boton-entrar">Entrar al Feed</button>
+        </form>
+      </section>
+
+      <section id="seccion-feed" class="panel panel-feed oculto" aria-labelledby="titulo-feed">
+        <div class="barra-superior-feed">
+          <div>
+            <h2 id="titulo-feed">Feed educativo</h2>
+            <p id="resumen-perfil" class="texto-apoyo"></p>
+          </div>
+          <button id="boton-editar-perfil" type="button" class="boton-secundario">Editar perfil</button>
+        </div>
+        <div id="contenedor-publicaciones" class="contenedor-publicaciones" aria-live="polite"></div>
+      </section>
+
+      <section id="seccion-cuaderno" class="panel panel-cuaderno oculto" aria-labelledby="titulo-cuaderno">
+        <div class="barra-superior-feed">
+          <div>
+            <h2 id="titulo-cuaderno">Cuaderno de guardados</h2>
+            <p class="texto-apoyo">Revisa, filtra o quita tus apuntes guardados.</p>
+          </div>
+        </div>
+        <div class="filtros-cuaderno">
+          <label for="filtro-cuaderno">Filtrar por materia o título</label>
+          <input id="filtro-cuaderno" type="text" placeholder="Escribe para filtrar">
+        </div>
+        <div id="contenedor-guardados" class="contenedor-publicaciones" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <div id="modal-publicar" class="modal oculto" role="dialog" aria-modal="true" aria-labelledby="titulo-publicar">
+      <div class="contenido-modal panel">
+        <div class="encabezado-modal">
+          <h2 id="titulo-publicar">Publicar nuevo apunte</h2>
+          <button id="boton-cerrar-modal" type="button" class="boton-secundario boton-cerrar" aria-label="Cerrar">Cerrar</button>
+        </div>
+        <form id="formulario-publicar" class="formulario-registro">
+          <label for="campo-materia-publicar">Materia</label>
+          <select id="campo-materia-publicar" name="materia" required>
+            <option value="">Selecciona una materia</option>
+            <option value="Matemáticas">Matemáticas</option>
+            <option value="Historia">Historia</option>
+            <option value="Biología">Biología</option>
+            <option value="Programación">Programación</option>
+            <option value="Física">Física</option>
+            <option value="Química">Química</option>
+            <option value="Tecnología">Tecnología</option>
+            <option value="Ciencia">Ciencia</option>
+            <option value="Arte">Arte</option>
+          </select>
+
+          <label for="campo-titulo-publicar">Título</label>
+          <input id="campo-titulo-publicar" name="titulo" type="text" required placeholder="Título del apunte">
+
+          <label for="campo-contenido-publicar">Contenido</label>
+          <textarea id="campo-contenido-publicar" name="contenido" rows="4" required placeholder="Escribe el contenido de tu apunte"></textarea>
+
+          <button type="submit" class="boton-principal">Guardar apunte</button>
+        </form>
+      </div>
+    </div>
+
+    <nav id="barra-navegacion" class="barra-navegacion oculto" aria-label="Navegación principal">
+      <button type="button" class="boton-nav activo" data-seccion="feed" aria-label="Feed">Feed</button>
+      <button type="button" class="boton-nav boton-nav-publicar" data-seccion="publicar" aria-label="Publicar">+ Publicar</button>
+      <button type="button" class="boton-nav" data-seccion="cuaderno" aria-label="Cuaderno">Cuaderno</button>
+    </nav>
+
+    <footer class="pie-pagina">
+      <small>Inslearns &mdash; Red social educativa interactiva</small>
+    </footer>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
